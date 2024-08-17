@@ -1,6 +1,6 @@
 ---
 type: lecture
-date: 2024-15-16T10:00:00+4:30
+date: 2024-09-16T10:00:00+4:30
 title: Python and Numpy refresher.
 tldr: "Setting up the conda env and refresher on Python"
 thumbnail: /_images/conda_numpy.webp
