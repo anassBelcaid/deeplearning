@@ -1,5 +1,6 @@
 ---
 type: page
+layout: distill
 title: Conda and Python refresher
 author: A.Belcaid
 permalink: /conda/

@@ -1,5 +1,6 @@
 ---
 type: page
+layout: distill
 title: Course overview
 author: A.Belcaid
 permalink: /introduction/
