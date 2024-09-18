@@ -72,7 +72,7 @@ In contrast, consider a **neural network** as your hypothesis class. Neural netw
 
 - **Complex Hypothesis Class**: Here, the hypothesis class includes a vast range of non-linear functions. This flexibility allows the model to capture intricate patterns and relationships in the data that a linear classifier would miss. For instance, a neural network could easily distinguish between digits like "8" and "3," which have complex curves and loops, by learning non-linear boundaries in the feature space. The complexity of the hypothesis class allows the network to adapt to the subtle variations in handwriting styles, curvature, and orientation that might be present in the digits.
 
-### **Summary**
+**Summary**
 
 These two examples highlight how the hypothesis class can vary significantly:
 
@@ -96,19 +96,70 @@ The **loss function** is a crucial component of any machine learning algorithm. 
 
 The goal of the machine learning algorithm is to find the set of parameters in the hypothesis class that **minimizes** this loss function. By minimizing the loss, the model becomes more accurate in making predictions on new, unseen data.
 
-#### **How It Works:**
 
-- **Prediction vs. Reality**: After the model makes a prediction based on the current set of parameters, the loss function compares this prediction to the actual label. If the prediction is far from the actual label, the loss function assigns a high penalty (high loss). If the prediction is accurate, the penalty is low (low loss).
+#### Loss Function 1 : Classification Error
+The simplest loss function to use in classification is just the **Classification error**. Which simply translates if the classifier has made an **error** or not
 
-- **Example 1: Mean Squared Error (MSE)**: In a regression setting, a common loss function is the Mean Squared Error. This loss function calculates the average of the squares of the differences between predicted and actual values. It penalizes larger errors more heavily, making it suitable for tasks where it’s important to minimize large deviations.
+$$
+l_{err}(h(x), y) = \left\{\begin{array}{ll}0 & \text{if } argmax_i h_i(x)=y\\[2pt] 1 & |text{otherwise}\end{array}\right.
+$$
 
-- **Example 2: Cross-Entropy Loss**: In classification tasks, like digit classification, cross-entropy loss (or log loss) is often used. This loss function measures the difference between two probability distributions—the predicted probability distribution output by the model and the actual distribution (usually represented as a one-hot encoded vector). If the model assigns a high probability to the correct class, the cross-entropy loss will be low. Conversely, if the model assigns a high probability to the wrong class, the loss will be high.
+- We typically use this loss to assess the **quality** of the classifier.
 
-#### **Intuitive Explanation Using Digit Classification:**
+> Unfortunately, this error is a **bad** loss function to use for **optimisation**. Because it's not **differentiable**.
 
-Imagine you’re training a model to classify handwritten digits from the MNIST dataset. If the model predicts that a particular digit image is a "7" with 90% confidence, but the actual label is "3," the loss function will penalize this prediction, resulting in a high loss value. On the other hand, if the model correctly predicts the digit "3" with high confidence, the loss value will be low, indicating a good prediction.
+#### Loss Function 2 : Cross Entropy
+
+We will use a more adequate loss function [Softmax](https://en.wikipedia.org/wiki/Softmax_function) or **Cross Entropy** which will exponentiate the entries of the **hypothesis function** (H) and then normalize the entries to make them sum to one.
+
+$$
+z_i = p(\text{label} = i) = \dfrac{\exp(h_i(x))}{\sum_j \exp\big(h_j(x)\big)}
+$$
+
+Then we define the loss as the **negative** log probability of the true class.
+
+$$
+l{ce}(h(x), y) = -\log\big(\text{label} = y\big) = -h_y(x) + \log \sum_j=1 ^k \exp(h_j(x))
+$$
+
+------
 
 #### **Optimization Goal:**
+
+The third ingredient of a machine learning algorithm is a method to solve the associated **optimisation problem**. i.e the problem of minimizing the average loss on the training set:
+
+$$
+\text{Minimize}_\theta\; \dfrac{1}{m} \sum_{i=1}^m l\big(h_\theta(x^i), y^i\big)
+$$
+
+For our **linear Classifier** Model, you will minimize the following problem:
+
+$$
+\text{Minimize}_\theta\; \dfrac{1}{m} \sum_{i=1}^m l\big(\theta^Tx, y^i\big)
+$$
+
+One classical method it to use [Gradient Descent](https://en.wikipedia.org/wiki/Gradient_descent) which needs to compute the Gradient of the loss function.
+
+
+- **Advanced Optimizers**: There are more sophisticated variants of gradient descent, like **Adam**, **RMSprop**, and **Adagrad**, which adaptively adjust the learning rate and incorporate momentum, allowing for faster and more reliable convergence. These optimizers are especially useful in training deep neural networks where the optimization landscape can be complex.
+
+For our linear Classifier, where the hyptothesis is defined as $f: \mathbb{R}^{n\times k}\rightarrow \mathbb{R}$, the gradient is defined as the **Matrix** of Partial derivatives
+
+$$
+\nabla_{\theta}f(\theta) \in \mathbb{R}^{n\times k}= \begin{bmatrix}\dfrac{d f(\theta)}{d\theta_{11}}&\ldots &\dfrac{d f(\theta)}{d\theta_{1k}}\\
+\vdots & \ddots& \vdots\\
+\dfrac{d f(\theta)}{d\theta_{n1}}& \ldots &\dfrac{d f(\theta)}{d\theta_{nk}}
+\end{bmatrix}
+$$
+
+And to minimize the function, the gradient descent algorithm proceeds by iteratively taking steps in the direction of the **negative gradient**
+
+$$
+\theta = \theta - \alpha \nabla_\theta f(\theta)
+$$
+
+Where $\alpha$ is the step size. The following figure shows the evolution of the algorithms with different steps sizes.
+
 
 <div style="display: flex; justify-content: center; align-items: center;">
   <div style="margin-right: 20px;">
@@ -122,169 +173,68 @@ Imagine you’re training a model to classify handwritten digits from the MNIST 
 
 The **objective** of the machine learning algorithm is to **minimize the loss function** across all examples in the training set. During training, the algorithm adjusts the parameters of the model to reduce the loss, thereby improving the model’s predictions. The process of minimizing the loss function is what ultimately allows the model to generalize well to new, unseen data.
 
-### Optimization Method
+#### Stochastic Gradient Descent
 
-The **optimization method** is the process or algorithm used to adjust the parameters of the model to minimize the loss function. In simpler terms, it’s the strategy that the machine learning algorithm employs to find the best possible set of parameters within the hypothesis class that results in the lowest error on the training data.
-
-Optimization is at the heart of training a machine learning model. Without an effective optimization method, even the best-defined hypothesis class and loss function would not yield a useful model.
-
-#### **How It Works:**
-
-- **Initial Parameters**: When a machine learning model is first initialized, its parameters are typically set randomly or based on some heuristic. At this stage, the model’s predictions are usually far from correct, leading to a high loss.
-
-- **Gradient Descent**: One of the most commonly used optimization methods is **Gradient Descent**. The idea behind gradient descent is to iteratively adjust the model’s parameters in the direction that reduces the loss the most. This direction is determined by the gradient of the loss function with respect to the parameters. In other words, the gradient tells us how to change the parameters to decrease the loss.
-
-  - **Learning Rate**: The step size for each update is controlled by a parameter called the **learning rate**. A larger learning rate means bigger steps, which can speed up convergence but might overshoot the optimal solution. A smaller learning rate means smaller, more precise steps but can make the training process slower.
-
-- **Stochastic Gradient Descent (SGD)**: In large datasets like MNIST, computing the gradient over the entire dataset can be computationally expensive. **Stochastic Gradient Descent (SGD)** addresses this by updating the parameters using a small, randomly selected subset of the data (called a mini-batch) in each iteration. This makes the optimization process faster and more scalable.
-
-- **Advanced Optimizers**: There are more sophisticated variants of gradient descent, like **Adam**, **RMSprop**, and **Adagrad**, which adaptively adjust the learning rate and incorporate momentum, allowing for faster and more reliable convergence. These optimizers are especially useful in training deep neural networks where the optimization landscape can be complex.
-
-# Image Classification: Example
-- **Motivation**. In this section we will introduce the Image Classification problem, which is the task of assigning an input image one label from a fixed set of categories. This is one of the core problems in Computer Vision that, despite its simplicity, has a large variety of practical applications. Moreover, as we will see later in the course, many other seemingly distinct Computer Vision tasks (such as object detection, segmentation) can be reduced to image classification.
-
-- **Example**. For example, in the image below an image classification model takes a single image and assigns probabilities to 4 labels, {cat, dog, hat, mug}. As shown in the image, keep in mind that to a computer an image is represented as one large 3-dimensional array of numbers. In this example, the cat image is 248 pixels wide, 400 pixels tall, and has three color channels Red,Green,Blue (or RGB for short). Therefore, the image consists of 248 x 400 x 3 numbers, or a total of 297,600 numbers. Each number is an integer that ranges from 0 (black) to 255 (white). Our task is to turn this quarter of a million numbers into a single label, such as “cat”.
+If our objective ( as in the case of Machine learning) is the sum of individual losses, **we don't** want to compute the gradient using **all examples** to make a single update to the **parameters**.
 
 
----
-<p align="center">
-  <img src="{{ '/_images/classify_example_four_classes.png' | relative_url }}" alt="Image classification example">
-  <br>
-<small>
-The task in Image Classification is to predict a single label (or a distribution over labels as shown here to indicate our confidence) for a given image. Images are 3-dimensional arrays of integers from 0 to 255, of size Width x Height x 3. The 3 represents the three color channels Red, Green, Blue.
-</small>
-</p>
----
-- **Challenges**. Since this task of recognizing a visual concept (e.g. cat) is relatively trivial for a human to perform, it is worth considering the challenges involved from the perspective of a Computer Vision algorithm. As we present (an inexhaustive) list of challenges below, keep in mind the raw representation of images as a 3-D array of brightness values:
-- **Viewpoint variation**. A single instance of an object can be oriented in many ways with respect to the camera.
-Scale variation. Visual classes often exhibit variation in their size (size in the real world, not only in terms of their extent in the image).
-- **Deformation**. Many objects of interest are not rigid bodies and can be deformed in extreme ways.
-- **Occlusion**. The objects of interest can be occluded. Sometimes only a small portion of an object (as little as few pixels) could be visible.
-- **Illumination conditions**. The effects of illumination are drastic on the pixel level.
-- **Background clutter**. The objects of interest may blend into their environment, making them hard to identify.
-Intra-class variation.
-
-The classes of interest can often be relatively broad, such as chair. There are many different types of these objects, each with their own appearance.
-A good image classification model must be invariant to the cross product of all these variations, while simultaneously retaining sensitivity to the inter-class variations.
+> Repeat: 
+>    - Sample a mini-batch of Data $X\in \mathbb{R}^{B\times n}$ and $y\in (1,\ldots, k)^B$
+>    - Update the parameters using the **Batch Gradient**:
 
 
----
-<p align="center">
-  <img src="{{ '/_images/challenges_image_classification.jpeg' | relative_url }}" alt="Image classification example">
-  <br>
-<small>
-Data-driven approach. How might we go about writing an algorithm that can classify images into distinct categories? Unlike writing an algorithm for, for example, sorting a list of numbers, it is not obvious how one might write an algorithm for identifying cats in images. Therefore, instead of trying to specify what every one of the categories of interest look like directly in code, the approach that we will take is not unlike one you would take with a child: we’re going to provide the computer with many examples of each class and then develop learning algorithms that look at these examples and learn about the visual appearance of each class. This approach is referred to as a data-driven approach, since it relies on first accumulating a training dataset of labeled images. Here is an example of what such a dataset might look like:
-</small>
-<br>
-<img src="{{ '/_images/trainset_example_classification.jpg' | relative_url }}" alt="Image classification example">
-</p>
----
-
-## CIFAR 10
-
-One popular toy image classification dataset is the [CIFAR-10 dataset](https://www.cs.toronto.edu/~kriz/cifar.html).
-
-- This dataset consists of **60,000** tiny images that are 32 pixels high and wide.
-- Each image is labeled with one of **10** classes (for example “airplane, automobile, bird, etc”).
-- These **60,000** images are partitioned into a training set of **50,000** images and a test set of **10,000** images.
-- In the image below you can see 10 random example images from each one of the 10 classes:
-
----
-<p align="center">
-  <img src="{{ '/_images/example_cifar_10.jpg' | relative_url }}" alt="Image classification example">
-  <br>
-<small>
-Example images from the <a href="https://www.cs.toronto.edu/~kriz/cifar.html">CIFAR-10 dataset</a>. Right: first column shows a few test images and next to each we show the top 10 nearest neighbors in the training set according to pixel-wise difference.
-</small>
-</p>
----
-
-Let's consider some notations which follows the standard in Machine Learning:
-
-- Training data : 
-
-$$
-x^i \in \mathbb{R}^n \quad y^i \in \{1, 2, \ldots, k\}\quad \forall i = 1,\ldots, m
+$$ 
+\theta = \theta -\dfrac{\alpha}{B} \sum_{i=1}^B \nabla_{\theta}l(h_\theta\big(x^i\big), y^i)
 $$
 
-- $n$ is the **dimentionality** of the input data.
-- $k$ is the number of classes.
-- $m$ is the number of points in the training set.
+### Gradient Cross Entropy
 
-So for the **CIFAR** we have:
-
-- $n = 32\times 32 = 1024$
-- $m = 50000$
-- $k = 10$.
-
-> Can you think of an **hypothesis function** for this problem?
-
-Our hypothesis functions maps inputs $x\in \mathbb{R}^n$ to $k-$dimentional vectors:
+Now we will move our attention to compute the gradient of the cross entropy loss function?
 
 $$
-h: \mathbb{R}^n \rightarrow \mathbb{R}^k
+\nabla_\theta l_{ce} (\theta^Tx, y) = ?
 $$
 
-where $h_i(x)$ indicate the measure of **belief** on how much likely the label is to be the class $i$.
+> Generally this done using **Backpropagration** that we will cover in more details in next chapters.
 
-For example, a **Linear hypothesis function** will have the following form:
-
-$$
-h_\theta(x) = \theta^T x
-$$
-
-where $\theta \in \mathbb{R}^{n \times k}$
-
-We should also choose a **loss function** to train the model. We will start with the simplest loss function to use in classification is just the classification error, i.e.,whether the classifier makes a **mistake** a or **no**.
+So let's start by computing the gradient of the **soft max** function itself to a general vector $h\in\mathbb{R}^k$
 
 $$
-l_{\text{err}}(h(x), y) =  \left\{\begin{array}{ll}0& \text{if } argmax_i h_i(x) = y\\1&\text{otherwise}\end{array}\right.
+\begin{eqnarray}
+\dfrac{\partial l_{ce}(h, y)}{\partial h_i} & =& \dfrac{\partial}{\partial h_i}\Big(-h_y + \log \sum_{j=1}^k \exp h_j\Big)\\
+ & =&  -1 \left\{i = y\right\} + \dfrac{\exp h_i}{\sum_{j=1}^k \exp h_j}
+\end{eqnarray}
 $$
 
-> Unfortunately, the error is a bad loss function to use for optimization, i.e., selecting
-the best parameters, because it is not differentiable
-
-#### **Softmax Function**
-
-The softmax function is used in the final layer of a neural network to convert the raw output scores (also known as logits) into probabilities. It does this by normalizing the output scores so that they sum to 100%, effectively representing a probability distribution over all possible classes.
-
-Given an input vector of scores $ z = [z_1, z_2, \dots, z_k] $ for $ k $ classes, the softmax function is defined as:
+The expression below could be written in **Vector Form** as 
 
 $$
-\text{Softmax}(z_i) = \frac{e^{z_i}}{\sum_{j=1}^{k} e^{z_j}}
+\nabla_h l_{ce}(h, y) = z - e_y
 $$
 
-This equation converts the score $ z_i $ for each class into a probability $ p_i $, where $ 0 \leq p_i \leq 1 $ and $ \sum_{i=1}^{k} p_i = 1 $.
+Where $z$ is the normalisation of the vector $\exp(h)$.
 
-#### **Cross-Entropy Loss**
+Now we will move the **hard part** where we need to compute the gradient for the full loss.
 
-Once the probabilities are obtained from the softmax function, the **cross-entropy loss** is used to quantify the difference between the predicted probability distribution and the actual distribution (which is usually a one-hot encoded vector representing the true class).
-
-For a single training example, where the true label is $ y $ and the predicted probability for each class is $p_i $, the cross-entropy loss is defined as:
+> We will use the **chain rule**  of multivariate calculus. But we need to be careful of the all the matrices dimensions.
 
 $$
-\text{Loss} = -\log(p_y)
+\begin{eqnarray}
+\dfrac{\partial}{\partial \theta}  l_{ce}(\theta^Tx, y) &=& \dfrac{\partial l_{ce}(\theta^Tx, y)}{\partial \theta^Tx}\dfrac{\theta^T x}{\partial \theta}\\
+&=& \big(z-e_y\big)\big(x\big)
+\end{eqnarray}
 $$
 
-If the true label is \( y \), this loss function penalizes the model based on how much probability it assigned to the correct class \( y \). If the model assigns a high probability to the correct class, the loss is low. Conversely, if the model assigns a low probability to the correct class, the loss is high.
-
-#### **Combined Softmax and Cross-Entropy**
-
-When the softmax function and cross-entropy loss are combined, the result is a single, differentiable loss function that can be used to optimize the model’s parameters via gradient descent or other optimization algorithms. This combination is particularly powerful because:
-
-- The **softmax function** ensures that the model outputs are interpretable as probabilities.
-- The **cross-entropy loss** provides a natural way to measure the performance of these probabilistic predictions, penalizing incorrect predictions based on the confidence level of the model.
-
-This loss function is widely used in tasks such as image classification, where the goal is to assign an input image to one of several possible categories.
-
-
-Now we move on the optimizer. For starter we could use [**Gradient descent**](https://en.wikipedia.org/wiki/Gradient_descent)
+The above formula is wrong as the dimension of the gradient is $(n\times k)$ while the provided formula has a dimension $k\times n$. The correct formula is 
 
 $$
-\theta = \theta - \alpha \nabla_\theta f(\theta)
+\dfrac{\partial}{\partial \theta}  l_{ce}(\theta^Tx, y)  = x(z-e_y)^T
 $$
 
-Of course we could use other optimisation methods that we will cover in up-coming lectures.
+> Now you are setup to implement a linear classifier for Image classification.
+> As we will dive deeper in the course of **Neural Network**, we will explore more **fancier** hypothesis.
+
+
 
 
 

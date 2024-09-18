@@ -1,6 +1,6 @@
 ---
 type: lecture
-date: 2024-09-24T10:00:00+4:30
+date: 2024-10-02T10:00:00+4:30
 title: Machine Learning Refresher
 tldr: "Image Classificationa and Data Driven algorithms"
 thumbnail: /_images/ml_refresher.webp

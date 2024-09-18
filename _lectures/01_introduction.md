@@ -1,6 +1,6 @@
 ---
 type: lecture
-date: 2024-09-16T8:00:00+4:30
+date: 2024-09-24T8:00:00+4:30
 title: Introduction and Logistics
 tldr: "Short introduction to the course and its logistics"
 thumbnail: /_images/intro_deep_learning.jpg
