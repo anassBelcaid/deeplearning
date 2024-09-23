@@ -9,8 +9,8 @@ links:
       name: notes
     # - url: /static_files/presentations/code.zip
     #   name: codes
-    # - url: https://google.com
-    #   name: slides
+    - url: /lectures/lecture1_malki.pdf
+      name: slides 
 ---
 **Suggested Readings:**
 - [Few things to know about Machine Learning](https://homes.cs.washington.edu/~pedrod/papers/cacm12.pdf)
