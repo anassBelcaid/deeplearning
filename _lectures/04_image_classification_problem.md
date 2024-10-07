@@ -7,8 +7,8 @@ thumbnail: /_images/image_classification_thumb.webp/
 links: 
     - url: /imageclassml/
       name: notes
-    # - url: /static_files/presentations/code.zip
-    #   name: codes
+    - url: /lectures/The problem of Image classification notes.pdf
+      name: slides
     # - url: https://google.com
     #   name: slides
 ---

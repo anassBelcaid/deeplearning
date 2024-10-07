@@ -4,6 +4,7 @@ layout: default
 
 <div class="content-wrapper">
   <div class="toc-wrapper">
+    <input type="text" id="search-bar" placeholder="Search..." oninput="searchContent()">
     <nav class="toc" id="toc">
       <!-- Table of Contents will be inserted here -->
     </nav>
@@ -15,24 +16,49 @@ layout: default
   </main>
 </div>
 
+<div id="progress-bar"></div>
+<button id="back-to-top" title="Back to top">↑</button>
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS-MML_HTMLorMML" type="text/javascript"></script>
 <script>
-  // Generate Table of Contents
   document.addEventListener('DOMContentLoaded', function() {
     const headings = document.querySelectorAll('h2, h3, h4, h5, h6');
     const toc = document.getElementById('toc');
-    
+    let currentList = toc;
+    let lastLevel = 2;
+
+    // Generate TOC with collapsible sections
     headings.forEach(function(heading, index) {
       const anchor = 'toc-' + index;
       heading.id = anchor;
-      
+      const level = parseInt(heading.tagName.replace('H', ''), 10);
+
+      if (level > lastLevel) {
+        const newList = document.createElement('ul');
+        currentList.lastElementChild.appendChild(newList);
+        currentList = newList;
+      } else if (level < lastLevel) {
+        let stepsUp = lastLevel - level;
+        while (stepsUp--) {
+          currentList = currentList.parentElement.parentElement;
+        }
+      }
+
       const listItem = document.createElement('li');
       const link = document.createElement('a');
       link.href = '#' + anchor;
       link.textContent = heading.textContent;
       link.classList.add('toc-link');
       listItem.appendChild(link);
-      toc.appendChild(listItem);
+      currentList.appendChild(listItem);
+      lastLevel = level;
+    });
+
+    // Add click event for collapsible behavior
+    toc.addEventListener('click', function(e) {
+      if (e.target.tagName === 'A') {
+        e.target.parentElement.classList.toggle('collapsed');
+      }
     });
 
     // Highlight current section in TOC
@@ -43,14 +69,52 @@ layout: default
         const tocLink = document.querySelector(`.toc-link[href="#${id}"]`);
         if (entry.intersectionRatio > 0) {
           tocLink.classList.add('active');
+          entry.target.classList.add('highlighted');
         } else {
           tocLink.classList.remove('active');
+          entry.target.classList.remove('highlighted');
         }
       });
     }, { rootMargin: '0px 0px -50% 0px' });
 
     headings.forEach(heading => observer.observe(heading));
+
+    // Show back-to-top button on scroll
+    const backToTopButton = document.getElementById('back-to-top');
+    window.onscroll = function() {
+      if (document.body.scrollTop > 300 || document.documentElement.scrollTop > 300) {
+        backToTopButton.style.display = "block";
+      } else {
+        backToTopButton.style.display = "none";
+      }
+    };
+
+    backToTopButton.addEventListener('click', function() {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+
+    // Update progress bar on scroll
+    window.onscroll = function() { updateProgressBar() };
+    function updateProgressBar() {
+      const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+      const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+      const scrolled = (winScroll / height) * 100;
+      document.getElementById("progress-bar").style.width = scrolled + "%";
+    }
   });
+
+  // Search function to filter headings
+  function searchContent() {
+    const query = document.getElementById('search-bar').value.toLowerCase();
+    const headings = document.querySelectorAll('h2, h3, h4, h5, h6');
+    headings.forEach(heading => {
+      if (heading.textContent.toLowerCase().includes(query)) {
+        heading.style.display = 'block';
+      } else {
+        heading.style.display = 'none';
+      }
+    });
+  }
 
   // Setup MathJax
   MathJax.Hub.Config({
@@ -62,6 +126,7 @@ layout: default
 </script>
 
 <style>
+  /* Overall page layout */
   .content-wrapper {
     display: flex;
     max-width: 1200px;
@@ -69,11 +134,13 @@ layout: default
     padding: 20px;
   }
   .toc-wrapper {
-    width: 100px;
+    width: 200px;
     position: sticky;
     top: 20px;
     align-self: flex-start;
     padding-right: 20px;
+    max-height: 90vh; /* TOC scrollable */
+    overflow-y: auto;
   }
   .separator {
     width: 1px;
@@ -84,9 +151,15 @@ layout: default
     flex-grow: 1;
     max-width: 650px;
   }
+
+  /* Table of Contents */
   .toc {
-    font-size: 10px;
+    font-size: 12px;
     line-height: 1.6;
+  }
+  .toc ul {
+    padding-left: 15px;
+    margin: 5px 0;
   }
   .toc li {
     list-style-type: none;
@@ -104,19 +177,53 @@ layout: default
     color: #000;
     font-weight: bold;
   }
-  @media (max-width: 768px) {
-    .content-wrapper {
-      flex-direction: column;
-    }
-    .toc-wrapper {
-      width: 100%;
-      position: static;
-      margin-bottom: 20px;
-    }
-    .separator {
-      width: 100%;
-      height: 1px;
-      margin: 20px 0;
-    }
+  .toc li.collapsed ul {
+    display: none;
   }
-</style>
+  .toc li ul {
+    margin-top: 5px;
+  }
+
+  /* Search Bar */
+  #search-bar {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 20px;
+    font-size: 14px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+  }
+
+  /* Heading highlight */
+  .highlighted {
+    background-color: #f0f8ff;
+    transition: background-color 0.5s ease;
+  }
+
+  /* Back to Top Button */
+  #back-to-top {
+    position: fixed;
+    bottom: 20px;
+    right: 30px;
+    background-color: #007BFF;
+    color: white;
+    border: none;
+    padding: 10px;
+    border-radius: 50%;
+    display: none;
+    cursor: pointer;
+    font-size: 18px;
+  }
+  #back-to-top:hover {
+    background-color: #0056b3;
+  }
+
+  /* Progress Bar */
+  #progress-bar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 0%;
+    height: 5px;
+    background-color: #007BFF;
+    z-index: 1000;
