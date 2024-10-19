@@ -7,10 +7,8 @@ thumbnail: /_images/ml_refresher.webp
 links: 
     - url: /mlrefresher/
       name: notes
-    # - url: /static_files/presentations/code.zip
-    #   name: codes
-    # - url: https://google.com
-    #   name: slides
+    - url : /lectures/imageclassml_KINDA.pdf 
+      name: students_notes
 ---
 **Suggested Readings:**
 
