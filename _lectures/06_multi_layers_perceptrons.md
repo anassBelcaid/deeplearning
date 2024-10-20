@@ -13,5 +13,6 @@ hide_from_announcments: true
 
 **Suggested Readings:**
 
--[Tensor MLP playground](https://playground.tensorflow.org/)
+- [Tensor MLP playground](https://playground.tensorflow.org/)
 - [Activations function in neural networks](https://www.v7labs.com/blog/neural-networks-activation-functions)
+- [Dropout](https://www.jmlr.org/papers/volume15/srivastava14a/srivastava14a.pdf)

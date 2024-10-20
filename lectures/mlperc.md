@@ -651,3 +651,170 @@ $$
 $$
 
 
+
+## Generalization in Deep Learning
+
+We can  recall that fitting the training data was only an **intermediate goal**. Our real
+quest all along was to discover *general patterns* on the basis of which we can make accurate predictions even on new examples drawn from the same underlying population. Machine learning researchers are *consumers* of optimization algorithms. Sometimes, we must even develop new optimization algorithms. But at the end of the day, optimization is **merely a means to an end**. At its core, machine learning is a statistical discipline and we wish to optimize training loss only insofar as some statistical principle (known or unknown) leads the resulting models to `generalize beyond the training set`.
+
+On the bright side, it turns out that deep neural networks trained by
+stochastic gradient descent **generalize remarkably well** across myriad prediction problems, spanning
+
+- *computer vision*
+- Natural language processing.
+- Time series data.
+- Recommender systems.
+- Electronic health records.
+- Protein folding;
+- Value function approximation in video games and board games.
+
+Both the theory and practice of deep learning are **rapidly evolving**, with
+theorists adopting new strategies to explain what's going on, even as
+practitioners continue to innovate at a blistering pace, building
+arsenals of **heuristics for training deep networks** and a body of
+intuitions and folk knowledge that provide guidance for deciding which
+techniques to apply in which situations.
+
+
+### Revisiting Overfitting and Regularization
+
+According to the `No Free Launc` theorem,
+any learning algorithm generalizes better on data with certain
+distributions, and **worse** with other distributions. Thus, given a finite
+training set, a model relies on certain assumptions: to achieve
+human-level performance it may be useful to identify *inductive biases*
+that reflect how humans think about the world. Such inductive biases
+show **preferences** for solutions with certain properties. For example, a
+deep MLP has an inductive bias towards building up a complicated
+function by the composition of simpler functions.
+
+With machine learning models encoding inductive biases, our approach to
+training them typically consists of two phases:
+
+1. Fit the training data;
+2. Estimate the **generalization error** (the true error on
+the underlying population) by evaluating the model on holdout data.
+
+The difference between our fit on the training data and our fit on the test
+data is called the **generalization gap** and when this is large, we say
+that our models **overfit** to the training data. In extreme cases of
+overfitting, we might exactly fit the training data, even when the test
+error remains significant. And in the classical view, the interpretation
+is that our models are too complex, requiring that we either shrink the
+number of features, the number of nonzero parameters learned, or the
+size of the parameters as quantified. 
+
+
+### Classical Regularization Methods for Deep Networks
+
+We described several classical regularization techniques for constraining the complexity of our models. In the chapter of optimisation, we  introduced a method called
+**weight decay**, which consists of adding a regularization term to the loss
+function in order to penalize large values of the weights. Depending on
+which weight norm is penalized this technique is known either as ridge
+regularization (for $\ell_2$ penalty) or lasso regularization (for
+an $\ell_1$ penalty). In the classical analysis of these
+regularizers, they are considered as **sufficiently restrictive** on the
+values that the weights can take to prevent the model from fitting
+arbitrary labels.
+
+In deep learning implementations, weight decay remains a popular tool.
+However, researchers have noted that typical strengths of $\ell_2$
+regularization **are insufficient** to prevent the networks from
+interpolating the data and thus the
+benefits if interpreted as regularization might only make sense in
+combination with the early stopping criterion. Absent early stopping, it
+is possible that just like the number of layers or number of nodes (in
+deep learning) or the distance metric (in 1-nearest neighbor), these
+methods may lead to better generalization not because they meaningfully
+constrain the power of the neural network but rather because they
+somehow encode inductive biases that are better compatible with the
+patterns found in datasets of interests. Thus, classical regularizers
+remain popular in deep learning implementations, even if the theoretical
+rationale for their efficacy may be radically different.
+
+
+### Dropout
+
+Let's think briefly about what we expect from a good predictive model.
+We want it to **peform well on unseen data**. Classical generalization
+theory suggests that to close the gap between train and test
+performance, we should aim for a **simple model**. Simplicity can come in
+the form of a **small number of dimensions**.  **Bishop formalized this idea when he proved that training
+with **input noise** is equivalent to **Tikhonov regularization**. This work
+drew a clear mathematical connection between the requirement that a
+function be smooth (and thus simple), and the requirement that it be
+resilient to perturbations in the input.
+
+After that [Srivastava.Hinton.Krizhevsky.ea.2014](https://www.jmlr.org/papers/volume15/srivastava14a/srivastava14a.pdf) developed a clever idea for how to apply Bishop's idea to the internal layers of a network,
+too. Their idea, called `dropout`, involves injecting noise while
+computing each internal layer during forward propagation, and it has
+become a standard technique for training neural networks. The method is
+called **dropout** because we literally *drop out* some neurons during
+training. Throughout training, on each iteration, standard dropout
+consists of zeroing out some fraction of the nodes in each layer before
+calculating the subsequent layer.
+
+The key challenge is **how to inject this noise**. One idea is to inject it
+in an *unbiased* manner so that the expected value of each layers while
+fixing the others equals the value it would have taken absent noise. In
+Bishop's work, he added Gaussian noise to the inputs to a linear model.
+At each training iteration, he added noise sampled from a distribution
+with mean zero $\epsilon \sim \mathcal{N}(0,\sigma^2)$ to the
+input $\mathbf{x}$, yielding a perturbed point
+$\mathbf{x} = \mathbf{x} + \epsilon$. In expectation,
+$E[\mathbf{x}'] = \mathbf{x}$.
+
+In standard dropout regularization, one zeros out some fraction of the
+nodes in each layer and then *debiases* each layer by normalizing by the
+fraction of nodes that were retained (not dropped out). In other words,
+with *dropout probability* $p$, each intermediate activation
+$h$ is replaced by a random variable $h'$ as follows:
+
+
+$$
+   \begin{aligned}
+   h' =
+   \begin{cases}
+       0 & \textrm{ with probability } p \\
+       \frac{h}{1-p} & \textrm{ otherwise}
+   \end{cases}
+   \end{aligned}
+$$
+
+By design, the expectation remains unchanged, i.e., $E[h'] = h$.
+
+
+#### Dropout in Practice
+
+Recall the MLP with a hidden layer and five hidden units from the figure of the MLP. When we apply dropout to a hidden layer, zeroing
+out each hidden unit with probability $p$, the result can be
+viewed as a network containing only a subset of the original neurons. In
+the following figure, $h_2$ and $h_5$ are removed.
+Consequently, the calculation of the outputs **no longer depends on**
+$h_2$ or $h_5$ and their respective gradient also vanishes
+when performing backpropagation. In this way, the calculation of the
+output layer cannot be overly dependent on any one element of
+$h_1, \ldots, h_5$.
+
+
+<p align="center">
+  <img src="{{ '/_images/lecture_mlperc/dropout2.svg' | relative_url }}" alt="Data Mining Image" style="width: 100%; height: 50%;">
+  <br>
+<small>
+   MLP before and after dropout.
+</small>
+</p>
+
+
+Typically, we disable dropout at **test time**. Given a trained model and a new example, we do not drop out any nodes and thus do not need to
+normalize. However, there are some exceptions: some researchers use
+dropout at test time as a heuristic for estimating the *uncertainty* of
+neural network predictions: if the predictions agree across many
+different dropout outputs, then we might say that the network is more
+confident.
+
+So in summary, beyond controlling the number of dimensions and the size of the weight
+vector, **dropout** is yet another tool for avoiding overfitting. Often
+tools are used jointly. Note that dropout is used only during training:
+it replaces an activation $h$ with a random variable with expected
+value $h$.
