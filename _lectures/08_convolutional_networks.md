@@ -2,7 +2,7 @@
 type: lecture
 date: 2024-11-15T10:00:00+4:30
 title: Convolutional neural networks.
-tldr: "Pytorch"
+tldr: "Convolution"
 thumbnail: /_images/conv_thumb.webp/
 links: 
     - url: /convolution/
