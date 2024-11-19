@@ -91,7 +91,7 @@ increase in computation and data.
 ## Alex Net
 
 Although CNNs were well known in the computer vision and machine
-learning communities following the introduction of **LeNet** [**LeCun.Jackel.Bottou.ea.1995**][(https://yann.lecun.com/exdb/publis/pdf/lecun-95b.pdf), they did not immediately **dominate
+learning communities following the introduction of **LeNet** [**LeCun.Jackel.Bottou.ea.1995**](https://yann.lecun.com/exdb/publis/pdf/lecun-95b.pdf), they did not immediately **dominate
 the field**. Although LeNet achieved good results on early small datasets,
 the performance and `feasibility` of training CNNs on larger, more
 realistic datasets had yet to be established. In fact, for much of the
@@ -533,7 +533,7 @@ layer.
 
 
 ```python
-class GoogleNet(d2l.Classifier):
+class GoogleNet(nn.Module):
     def b1(self):
         return nn.Sequential(
             nn.LazyConv2d(64, kernel_size=7, stride=2, padding=3),
