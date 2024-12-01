@@ -6,6 +6,16 @@ author: A.Belcaid
 permalink: /modernconv/
 ---
 
+<script type="text/javascript">
+  MathJax = {
+    tex: {
+      inlineMath: [['$', '$'], ['\\(', '\\)']],
+      displayMath: [['$$', '$$'], ['\\[', '\\]']]
+      packages: {'[+]': ['ams']}, // Load AMS (American Mathematical Society) extensions
+    }
+  };
+</script>
+
 
 <p align="center">
   <img src="{{ '/_images/ResNet.webp' | relative_url }}" alt="Data Mining Image" style="width: 100%; height: 70%;">
@@ -625,3 +635,341 @@ def b5(self):
                          nn.AdaptiveAvgPool2d((1,1)), nn.Flatten())
 
 ```
+
+## Batch Normalization
+
+Training deep neural networks is **difficult**. Getting them to converge in
+a reasonable amount of time can be tricky. In this section, we describe
+`batch normalization`, a popular and effective technique that
+consistently **accelerates** the convergence of deep networks
+[Ioffe.Szegedy.2015](https://arxiv.org/pdf/1502.03167). Together with **residual blocks** covered in the next sections. Batch normalization has made it possible
+for practitioners to routinely train networks with over **100 layers**. A
+secondary (serendipitous) benefit of batch normalization lies in its
+inherent regularization.
+
+**Batch normalization** is applied to individual layers, or optionally, to
+all of them:
+
+- In each training iteration, we first **normalize** the inputs
+(of batch normalization) by **subtracting their mean** >and dividing by their
+standard deviation, where both are estimated based on the statistics of
+the `current minibatch`.
+- Next, we apply a scale coefficient and an offset
+to recover the lost degrees of freedom. It is precisely due to this
+*normalization* based on *batch* statistics that *batch normalization*
+derives its name.
+
+> Note that if we tried to apply batch normalization with minibatches of
+size 1, we would not be able to learn anything. That is because after
+subtracting the means, each hidden unit would take value 0. As you might
+guess, since we are devoting a whole section to batch normalization,
+with large enough minibatches the approach proves effective and stable.
+One takeaway here is that when applying batch normalization, the choice
+of batch size is even more significant than without batch normalization,
+or at least, suitable calibration is needed as we might adjust batch
+size.
+
+Denote by $\mathcal{B}$ a minibatch and let
+$\mathbf{x} \in \mathcal{B}$ be an input to batch normalization
+($\textrm{BN}$). In this case the batch normalization is defined
+as follows:
+
+
+$$
+\textrm{BN}(\mathbf{x}) = \boldsymbol{\gamma} \odot \frac{\mathbf{x} - \hat{\boldsymbol{\mu}}_\mathcal{B}}{\hat{\boldsymbol{\sigma}}_\mathcal{B}} + \boldsymbol{\beta}.
+$$
+
+In previous equation:
+
+- $\hat{\boldsymbol{\mu}}_\mathcal{B}$ is the sample mean.
+- $\hat{\boldsymbol{\sigma}}_\mathcal{B}$ is
+the sample standard deviation of the minibatch $\mathcal{B}$.
+
+After applying standardization, the resulting minibatch has zero mean
+and unit variance. The choice of unit variance (rather than some other
+magic number) is arbitrary. We recover this degree of freedom by:
+
+- including an elementwise `scale parameter` $\boldsymbol{\gamma}$.
+-  `shift parameter` $\boldsymbol{\beta}$ that have the same
+shape as $\mathbf{x}$.
+
+> Both are parameters that need to be learned as part of model training.
+
+
+The variable magnitudes for intermediate layers cannot diverge during
+training since batch normalization actively centers and rescales them
+back to a given mean and size (via
+ - $\hat{\boldsymbol{\mu}}_\mathcal{B}$
+ - $\hat{\boldsymbol{\sigma}}_\mathcal{B}$
+
+Practical experience confirms that, as alluded to when discussing feature rescaling, batch
+normalization seems to allow for more **aggressive learning rates**. We
+calculate $\mu_\mathcal{B}$ and
+${\hat{\boldsymbol{\sigma}}_\mathcal{B}}$ in the previous equation  as follows:
+
+
+$$
+   \hat{\boldsymbol{\mu}}_\mathcal{B} = \frac{1}{|\mathcal{B}|} \sum_{\mathbf{x} \in \mathcal{B}} \mathbf{x}
+   \textrm{ and }
+   \hat{\boldsymbol{\sigma}}_\mathcal{B}^2 = \frac{1}{|\mathcal{B}|} \sum_{\mathbf{x} \in \mathcal{B}} (\mathbf{x} - \hat{\boldsymbol{\mu}}_{\mathcal{B}})^2 + \epsilon.
+$$
+
+Note that we add a small constant $\epsilon > 0$ to the variance
+estimate to ensure that we never **attempt division by zero**, even in cases
+where the empirical variance estimate might be very small or vanish. The
+estimates 
+- $\hat{\boldsymbol{\mu}}_\mathcal{B}$ and
+- ${\hat{\boldsymbol{\sigma}}_\mathcal{B}}$
+
+counteract the scaling issue by using noisy estimates of mean and variance. You might think
+that this noisiness should be a problem. On the contrary, it is actually
+beneficial.
+
+### Batch Normalization Layers
+
+Batch normalization implementations for fully connected layers and
+convolutional layers are `slightly different`. One key difference between
+batch normalization and other layers is that because the former operates
+on a full minibatch at a time, we cannot just ignore the batch dimension
+as we did before when introducing other layers.
+
+### Fully Connected Layers
+
+When applying batch normalization to fully connected layers, in their original paper inserted batch
+normalization after the affine transformation and **before** the nonlinear
+activation function. Later applications experimented with inserting
+batch normalization right **after** activation functions. Denoting the
+input to the fully connected layer by $\mathbf{x}$, the affine
+transformation by $\mathbf{W}\mathbf{x} + \mathbf{b}$ (with the
+weight parameter $\mathbf{W}$ and the bias parameter
+$\mathbf{b}$), and the activation function by $\phi$, we can
+express the computation of a batch-normalization-enabled, fully
+connected layer output $\mathbf{h}4 as follows:
+
+$$
+ \mathbf{h} = \phi(\textrm{BN}(\mathbf{W}\mathbf{x} + \mathbf{b}) ).
+$$
+
+Recall that mean and variance are computed on the *same* minibatch on
+which the transformation is applied.
+
+### Convolutional Layers
+
+Similarly, with convolutional layers, we can apply batch normalization
+after the convolution but before the nonlinear activation function. The
+key difference from batch normalization in fully connected layers is
+that **we apply the operation on a per-channel basis across all
+locations**. This is compatible with our assumption of translation
+invariance that led to convolutions: we assumed that the specific
+location of a pattern within an image was not critical for the purpose
+of understanding.
+
+Assume that our minibatches contain $m$ examples and that for each
+channel, the output of the convolution has height $p$ and width
+$q$. For convolutional layers, we carry out each batch
+normalization over the $m \cdot p \cdot q$ elements per output
+channel simultaneously. Thus, we collect the values over all spatial
+locations when computing the mean and variance and consequently apply
+the same mean and variance within a **given channel** to normalize the value
+at each spatial location. Each channel has its own scale and shift
+parameters, both of which are scalars.
+
+
+### Batch Normalization During Prediction
+
+As we mentioned earlier, batch normalization typically behaves
+differently in training mode than in prediction mode. First, the noise
+in the sample mean and the sample variance arising from estimating each
+on minibatches is no longer desirable once we have trained the model.
+Second, we might not have the luxury of computing per-batch
+normalization statistics. For example, we might need to apply our model
+to make one prediction at a time.
+
+Typically, after training, we **use the entire dataset** to compute stable
+estimates of the variable statistics and then fix them at prediction
+time.
+
+> Hence, batch normalization behaves differently during training
+than at test time. Recall that dropout also exhibits this
+characteristic.
+
+To see how batch normalization works in practice, we implement one from
+scratch below.
+
+```python
+def batch_norm(X, gamma, beta, moving_mean, moving_var, eps, momentum):
+    # Use is_grad_enabled to determine whether we are in training mode
+    if not torch.is_grad_enabled():
+        # In prediction mode, use mean and variance obtained by moving average
+        X_hat = (X - moving_mean) / torch.sqrt(moving_var + eps)
+    else:
+        assert len(X.shape) in (2, 4)
+        if len(X.shape) == 2:
+            # When using a fully connected layer, calculate the mean and
+            # variance on the feature dimension
+            mean = X.mean(dim=0)
+            var = ((X - mean) ** 2).mean(dim=0)
+        else:
+            # When using a two-dimensional convolutional layer, calculate the
+            # mean and variance on the channel dimension (axis=1). Here we
+            # need to maintain the shape of X, so that the broadcasting
+            # operation can be carried out later
+            mean = X.mean(dim=(0, 2, 3), keepdim=True)
+            var = ((X - mean) ** 2).mean(dim=(0, 2, 3), keepdim=True)
+        # In training mode, the current mean and variance are used
+        X_hat = (X - mean) / torch.sqrt(var + eps)
+        # Update the mean and variance using moving average
+        moving_mean = (1.0 - momentum) * moving_mean + momentum * mean
+        moving_var = (1.0 - momentum) * moving_var + momentum * var
+    Y = gamma * X_hat + beta  # Scale and shift
+    return Y, moving_mean.data, moving_var.data
+
+```
+We can now create a proper BatchNorm layer. Our layer will maintain proper parameters for scale gamma and shift beta, both of which will be updated in the course of training. Additionally, our layer will maintain moving averages of the means and variances for subsequent use during model prediction.
+
+
+```python
+class BatchNorm(nn.Module):
+    # num_features: the number of outputs for a fully connected layer or the
+    # number of output channels for a convolutional layer. num_dims: 2 for a
+    # fully connected layer and 4 for a convolutional layer
+    def __init__(self, num_features, num_dims):
+        super().__init__()
+        if num_dims == 2:
+            shape = (1, num_features)
+        else:
+            shape = (1, num_features, 1, 1)
+        # The scale parameter and the shift parameter (model parameters) are
+        # initialized to 1 and 0, respectively
+        self.gamma = nn.Parameter(torch.ones(shape))
+        self.beta = nn.Parameter(torch.zeros(shape))
+        # The variables that are not model parameters are initialized to 0 and
+        # 1
+        self.moving_mean = torch.zeros(shape)
+        self.moving_var = torch.ones(shape)
+
+    def forward(self, X):
+        # If X is not on the main memory, copy moving_mean and moving_var to
+        # the device where X is located
+        if self.moving_mean.device != X.device:
+            self.moving_mean = self.moving_mean.to(X.device)
+            self.moving_var = self.moving_var.to(X.device)
+        # Save the updated moving_mean and moving_var
+        Y, self.moving_mean, self.moving_var = batch_norm(
+            X, self.gamma, self.beta, self.moving_mean,
+            self.moving_var, eps=1e-5, momentum=0.1)
+        return Y
+
+```
+
+## Residual Networks (ResNet) and ResNeXt
+
+As we design ever deeper networks it becomes imperative to understand
+how adding layers can increase the complexity and expressiveness of the
+network. Even more important is the ability to design networks where
+adding layers makes networks strictly more expressive rather than just
+different. To make some progress we need a bit of mathematics.
+
+
+Let's focus on a local part of a neural network, as depicted.
+
+<p align="center">
+  <img src="{{ '/_images/recent_arch/residual-block.svg' | relative_url }}"  >
+<hr>
+<small>
+  <center>
+        Residual block
+  </center>
+</small>
+</p>
+
+
+Denote the input by $\mathbf{x}$, we assume that $f(\mathbf{x})$, the desired underlying mapping we
+want to obtain by learning, is to be used as input to the activation
+function on the top. On the left, the portion within the dotted-line box
+must directly learn $f(\mathbf{x})$. On the right, the portion
+within the dotted-line box needs to learn the **residual mapping**
+$g(\mathbf{x}) = f(\mathbf{x}) - \mathbf{x}$, which is how the
+residual block derives its name. If the identity mapping
+$f(\mathbf{x}) = \mathbf{x}$ is the desired underlying mapping,
+the residual mapping amounts to $g(\mathbf{x}) = 0$ and it is thus
+easier to learn: we only need to push the weights and biases of the
+upper weight layer (e.g., fully connected layer and convolutional layer)
+within the dotted-line box to zero.
+
+
+ResNet has VGG's full $3\times 3$ convolutional layer design. The
+residual block has two $3\times 3$ convolutional layers with the
+same number of output channels. Each convolutional layer is followed by
+a **batch normalization** layer and a ReLU activation function. Then, we
+**skip** these two convolution operations and add the input directly before
+the final ReLU activation function. This kind of design requires that
+the output of the two convolutional layers has to be of the same shape
+as the input, so that they can be added together. If we want to change
+the number of channels, we need to introduce an additional
+$1\times 1$ convolutional layer to transform the input into the
+desired shape for the addition operation. Let's have a look at the code
+below.
+
+```python
+class Residual(nn.Module):
+    """The Residual block of ResNet models."""
+    def __init__(self, num_channels, use_1x1conv=False, strides=1):
+        super().__init__()
+        self.conv1 = nn.LazyConv2d(num_channels, kernel_size=3, padding=1,
+                                   stride=strides)
+        self.conv2 = nn.LazyConv2d(num_channels, kernel_size=3, padding=1)
+        if use_1x1conv:
+            self.conv3 = nn.LazyConv2d(num_channels, kernel_size=1,
+                                       stride=strides)
+        else:
+            self.conv3 = None
+        self.bn1 = nn.LazyBatchNorm2d()
+        self.bn2 = nn.LazyBatchNorm2d()
+
+    def forward(self, X):
+        Y = F.relu(self.bn1(self.conv1(X)))
+        Y = self.bn2(self.conv2(Y))
+        if self.conv3:
+            X = self.conv3(X)
+        Y += X
+        return F.relu(Y)
+
+```
+This code generates two types of networks: one where we add the input to
+the output before applying the ReLU nonlinearity whenever
+`use_1x1conv=False`; and one where we adjust channels and resolution
+by means of a $1 \times 1$ convolution before adding. The following figure illustrates this.
+
+
+
+<p align="center">
+  <img src="{{ '/_images/recent_arch/resnet-block.svg' | relative_url }}"  >
+<hr>
+<small>
+  <center>
+ResNet block with and without 1x1 convolution, which transforms the input into the desired shape for the addition operation.¶
+  </center>
+</small>
+</p>
+
+
+### ResNet Model
+
+The first two layers of ResNet are the same as those of the GoogLeNet we
+described before: the $7\times 7$ convolutional layer with 64
+output channels and a stride of 2 is followed by the $3\times 3$
+max-pooling layer with a stride of 2. The difference is the batch
+normalization layer added after each convolutional layer in ResNet.
+
+
+<p align="center">
+  <img src="{{ '/_images/recent_arch/resnet18-90.svg' | relative_url }}"  >
+<hr>
+<small>
+  <center>
+The ResNet-18 architecture
+  </center>
+</small>
+</p>
+
