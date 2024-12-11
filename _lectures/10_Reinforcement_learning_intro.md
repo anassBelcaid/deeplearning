@@ -16,3 +16,4 @@ hide_from_announcments: true
 - [Gym Library](https://www.gymlibrary.dev/)
 - [Value iteration algorithm](https://www.geeksforgeeks.org/implement-value-iteration-in-python/)
 - [Deep Q Learning](https://pytorch.org/tutorials/intermediate/reinforcement_q_learning.html )
+- [Playing Atri with Deep Q learning](https://arxiv.org/pdf/1312.5602)
