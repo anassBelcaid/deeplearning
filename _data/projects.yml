@@ -1,0 +1,127 @@
+- name: Object detection for the visually impaired
+  thumbnail: ../assets/projects/blind_object_detection.png
+  report: https://drive.google.com/file/d/1Vv6EhXSbO4w6Sy2qqHGKTIQmbE0aBO_v/view?usp=sharing
+  presentation1: https://docs.google.com/presentation/d/10jtMfHUzhn9vW3u2sWJy-81xtK_Bqbpx/edit?usp=sharing&ouid=109099988662065390850&rtpof=true&sd=true
+  presentation2: https://docs.google.com/presentation/d/1irvIlOCEZK3dfcl1EUQWpGH9O6vvrc-0/edit?usp=sharing&ouid=109099988662065390850&rtpof=true&sd=true
+  students: [A.Brouki, I.Khaila, N.El Oumni]
+- name: Visual Question Answering
+  thumbnail: ../assets/projects/visual_question_answering.png
+  report: https://drive.google.com/file/d/1I6IevcIEoiRZTdcErhoPc46wTppyVBSi/view?usp=sharing
+  presentation1: https://drive.google.com/file/d/1juH6iR5YjzC8y_ZTr5QaYm8UX0qfEkr_/view?usp=sharing
+  presentation2: https://drive.google.com/file/d/1eZPEv8yFhZ4DYryo8T0HmfbtNbfLBDhI/view?usp=sharing
+  students: [T.Bouhafa,L.Malki]
+- name: Crop and Weed Detection 
+  thumbnail: ../assets/projects/weed_detection.png
+  # report: https://drive.google.com/file/d/1Vv6EhXSbO4w6Sy2qqHGKTIQmbE0aBO_v/view?usp=sharing
+  presentation1: https://drive.google.com/file/d/107e6uXPINq-7Yh2s2ZIBULIUNa9PXCeB/view?usp=drive_link 
+  # presentation2: https://docs.google.com/presentation/d/1irvIlOCEZK3dfcl1EUQWpGH9O6vvrc-0/edit?usp=sharing&ouid=109099988662065390850&rtpof=true&sd=true
+  students: [A.Maharavo, A.Kinda,A.Elhassani]
+- name: Fire Detection
+  thumbnail: ../assets/projects/fire_detection.png
+  report: https://drive.google.com/file/d/1k03eGYwJg7Mq1l0u3DVC__N6HVLUEpnL/view?usp=sharing
+  presentation1: https://docs.google.com/presentation/d/115er0anL5pKp9GfK89Kh3uWMjTO8rRUe/edit?usp=sharing&ouid=109099988662065390850&rtpof=true&sd=true
+  presentation2: https://docs.google.com/presentation/d/1LillInnoKpbA3tkG4OYZ9L2sGsWormiG/edit?usp=sharing&ouid=109099988662065390850&rtpof=true&sd=true
+  students: [A.El Khatib, A.Anhal]
+- name: Voice command recognition
+  thumbnail: ../assets/projects/voice_command_recognition.jpg
+  report: https://drive.google.com/file/d/1MpxM-3RSZXwbjlZCUUVqNTdR4Gs_-NBD/view?usp=sharing
+  presentation1: https://docs.google.com/presentation/d/1oK6p5jFeKXeyd93ruwYT0fV6lkJFMJWw/edit?usp=drive_link&ouid=109099988662065390850&rtpof=true&sd=true
+  presentation2: https://docs.google.com/presentation/d/13BG3Yxv9_QXLlRCdc84UBpDeFOx1a7iu/edit?usp=sharing&ouid=109099988662065390850&rtpof=true&sd=true
+  students: [D.Ahrar, H.Amoussa]
+- name: Facial Emotion Recognition
+  thumbnail: ../assets/projects/facial_image_reconition.jpeg
+  report: https://drive.google.com/file/d/1t0yUwo23ffY7REzKzDTnyF4knBe5wt5q/view?usp=sharing
+  presentation1: https://docs.google.com/presentation/d/1t9w11RUC6loA6bqMn3W4AscYELZXRypv/edit?usp=sharing&ouid=109099988662065390850&rtpof=true&sd=true
+  presentation2: https://docs.google.com/presentation/d/1USalj-_R2hFf22ZAdcl1KW3Fiaw0wYH7/edit?usp=sharing&ouid=109099988662065390850&rtpof=true&sd=true
+  students: [C.Ahnin,M.Benyiche,A.Eddaoudy]
+- name: Plant disease detection
+  thumbnail: ../assets/projects/plant_disease_detection.jpg
+  report: https://drive.google.com/file/d/1M-ddkRinaH9vh_4ZS-lNxOG_g_NIy9em/view?usp=sharing
+  presentation1: https://drive.google.com/file/d/1LXXTlakHLkKdEu7HpYwSKQeyx1RYYUxn/view?usp=sharing
+  presentation2: https://drive.google.com/file/d/1p-emlmRKDbwJJ1V69d40Qm4J_e48ZZ0U/view?usp=sharing
+  students: [W.Ben Yahia, Z.Bennani]
+- name: Stock Market Detection
+  thumbnail: ../assets/projects/stock_market_detection.png
+  report: https://drive.google.com/file/d/1H4PD167AXw1N-MmtOxMMn39Xbw96hlzb/view?usp=sharing
+  presentation1: https://docs.google.com/presentation/d/1tOobKkZJuym1OWH81QUy5ihrsS2ArRrV/edit?usp=sharing&ouid=109099988662065390850&rtpof=true&sd=true
+  presentation2: https://docs.google.com/presentation/d/1NkEoiQKZwMPgZh--klN5vAQBm0sMMyDy/edit?usp=sharing&ouid=109099988662065390850&rtpof=true&sd=true
+  students: [H.Ouanad, H.Kharfasse, H.Marir]
+- name: Image Enhancing
+  thumbnail: ../assets/projects/super_resolution.jpg
+  report: https://drive.google.com/file/d/1oibFpijz1RsSDCUHKjv09drBA4ILIrEc/view?usp=sharing
+  presentation1: https://drive.google.com/file/d/1ORrRvtZvZK-6NIA2tLfBd9oKgObVLrCw/view?usp=sharing
+  presentation2: https://drive.google.com/file/d/1Psp_XrZn3wcmBpO--apQvwqXCt3mR4va/view?usp=sharing
+  students: [K.Ryad, B.Tarre, M.Benadir]
+- name: Sign Language Detection
+  thumbnail: ../assets/projects/sign_language_detection.png
+  # report: https://drive.google.com/file/d/1oibFpijz1RsSDCUHKjv09drBA4ILIrEc/view?usp=sharing
+  presentation1: https://docs.google.com/presentation/d/1tWjwDihBGbGHp_Z0uYSZVmueyP5JX8nY/edit?usp=sharing&ouid=109099988662065390850&rtpof=true&sd=true
+  # presentation2: https://drive.google.com/file/d/1Psp_XrZn3wcmBpO--apQvwqXCt3mR4va/view?usp=sharing
+  students: [N.Aharran, D.Ben Ayad]
+- name: Customer review analysis to determine their satisfaction level
+  thumbnail: ../assets/projects/customer_satisfaction.png
+  report: https://drive.google.com/file/d/1EQ7InbQKJ9UHl5E7b2_nCqFkkJdeIAxJ/view?usp=sharing
+  presentation1: https://docs.google.com/presentation/d/13CiSkNfpKXcLigjVHs59ynqKWffhaYb8/edit?usp=sharing&ouid=109099988662065390850&rtpof=true&sd=true
+  presentation2: https://drive.google.com/file/d/1J8Knst-YxKmDhizAAKireRBbQGq2k-3D/view?usp=sharing
+  students: [S.Akhrif, O.Amerkan]
+- name: Deep Fake Detection
+  thumbnail: ../assets/projects/deep_fake_detection.png
+  report: https://drive.google.com/file/d/1L4OZwr0Bu8l8rTigz5picTvHnQCRW3zl/view?usp=sharing
+  presentation1: https://docs.google.com/presentation/d/1mLYPq6JQPh9EpoqOsS8CO2ORT3_eJPos/edit?usp=sharing&ouid=109099988662065390850&rtpof=true&sd=true
+  presentation2: https://docs.google.com/presentation/d/1YEIhOufbXLokTSsELZcfT7gq6W94JYJm/edit?usp=sharing&ouid=109099988662065390850&rtpof=true&sd=true
+  students: [C.Bouhnas, N.Elalami, A.Elgamani]
+- name: Breast Cancer Detection
+  thumbnail: ../assets/projects/breast_cancer_detection.png
+  report: https://drive.google.com/file/d/1okxc4Cl5YFRyn5vZoB9yFtpZ5a-nPg-V/view?usp=sharing
+  presentation1: https://drive.google.com/file/d/10x9r-yFbnzvDiSrg25cVgANODz_-9_IB/view?usp=sharing
+  presentation2: https://drive.google.com/file/d/1PZX2Dn2J0zBeghxaLAD6VURPJB-SUK2Z/view?usp=sharing
+  students: [H. Kamsa, N.ElAkili, M.Hida]
+- name: Drivers Drowsiness Detection
+  thumbnail: ../assets/projects/driver_drowsiness_detection.jpeg
+  report: https://drive.google.com/file/d/1haXZT2EZeup2npzVLR8zhTOfY-o6bEzt/view?usp=sharing
+  presentation1: https://docs.google.com/presentation/d/1NA7LYlL_Q1cYVT6dgN2Jz0FWW_5Emiws/edit?usp=sharing&ouid=109099988662065390850&rtpof=true&sd=true
+  presentation2: https://docs.google.com/presentation/d/1AUslGTXsI3y8LWGJ2Hwu2nDEqLlBTNgD/edit?usp=sharing&ouid=109099988662065390850&rtpof=true&sd=true
+  students: [A.Salim, B.Bendaoud]
+- name: Environmental semantic segmentation for autonomous self-driving cars.
+  thumbnail: ../assets/projects/semantic_segementation.png
+  report: https://drive.google.com/file/d/1LVeo6YDUi0ZU8yxRp5wwZg9OKGFa1IJF/view?usp=sharing
+  presentation1: https://docs.google.com/presentation/d/1ndTCt8GpC4iauznbwrYkZHRBoeHmrPWS/edit?usp=sharing&ouid=109099988662065390850&rtpof=true&sd=true
+  presentation2: https://docs.google.com/presentation/d/1XFzxQcp9uBw5-IXybGHyAU24zAgaiIB7/edit?usp=sharing&ouid=109099988662065390850&rtpof=true&sd=true
+  students: [H.Kholti, Z.Yahya, A.Bouzhar]
+- name: Speech Emotin Recognition
+  thumbnail: ../assets/projects/speech_emotion_recognition.jpg
+  report: https://drive.google.com/file/d/1EtDbPA81V264uLk-2O9Ocs8dkjO8VMxE/view?usp=sharing
+  presentation1: https://docs.google.com/presentation/d/1XQz0wckw36yt8waDPbrjRe7BeQY7BSK7/edit?usp=sharing&ouid=109099988662065390850&rtpof=true&sd=true
+  presentation2: https://docs.google.com/presentation/d/1wVXKDw8H0on5bQ6SK2KntAoNLEn6O0jz/edit?usp=sharing&ouid=109099988662065390850&rtpof=true&sd=true
+  students: [F.Tidaadar, O.Youness, A.Sebbar]
+- name: Blood Group Detection 
+  thumbnail: ../assets/projects/blood_group_detection.jpeg
+  report: https://drive.google.com/file/d/1QgbEmnDvPj1PnROX2gbt0H8KOFB4yXfC/view?usp=sharing
+  presentation1: https://docs.google.com/presentation/d/1_nyfeF_AwNBshevQzKY2b2o_dEYJKE4h/edit?usp=sharing&ouid=109099988662065390850&rtpof=true&sd=true
+  presentation2: https://docs.google.com/presentation/d/17-FVRhQWkB1N2cOxuOKA_CxwW2MjR_gr/edit?usp=sharing&ouid=109099988662065390850&rtpof=true&sd=true
+  students: [M.Amhal, A.Bekkali]
+- name: Brain Tumor Segmentation
+  thumbnail: ../assets/projects/brain_tumor_segmentation.png
+  report: https://drive.google.com/file/d/1ymDouPxfcKITd6j7VNmdH4qhRDxUMH9N/view?usp=sharing
+  presentation1: https://docs.google.com/presentation/d/1I0TOIChqVVdhtN35E7hf2-b-awxOEE_U/edit?usp=sharing&ouid=109099988662065390850&rtpof=true&sd=true
+  presentation2: https://docs.google.com/presentation/d/1BAr7zRXdXaM_wGHJpCOz9RaujUr9pQ1I/edit?usp=sharing&ouid=109099988662065390850&rtpof=true&sd=true
+  students: [Y.Boulaalam, O.Bouskine]
+- name: Detection of suicidal messages and signs of depression
+  thumbnail: ../assets/projects/suicidal_messages.png
+  report: https://drive.google.com/file/d/1FkhQSihjk2JhivST7A3429FEuyzEv-fP/view?usp=sharing
+  presentation1: https://prezi.com/p/yneq546w-sch/detection-des-messages-suicidaires-et-des-signes-de-depression/
+  # presentation2: https://docs.google.com/presentation/d/1BAr7zRXdXaM_wGHJpCOz9RaujUr9pQ1I/edit?usp=sharing&ouid=109099988662065390850&rtpof=true&sd=true
+  students: [M.Ferza. L.Andolf]
+- name: Peneumonia detection
+  thumbnail: ../assets/projects/pneumenia_detection.png
+  report: https://drive.google.com/file/d/1UZc9itwtYXF4WhTukyFNE-DYexv1qdF0/view?usp=sharing
+  # presentation1: https://docs.google.com/presentation/d/1I0TOIChqVVdhtN35E7hf2-b-awxOEE_U/edit?usp=sharing&ouid=109099988662065390850&rtpof=true&sd=true
+  # presentation2: https://docs.google.com/presentation/d/1BAr7zRXdXaM_wGHJpCOz9RaujUr9pQ1I/edit?usp=sharing&ouid=109099988662065390850&rtpof=true&sd=true
+  students: [Z. El ouaragli, O.El Abbass]
+- name: Food Classification and Calorie Estimation
+  thumbnail: ../assets/projects/food_calory_estimation.png
+  report: https://drive.google.com/file/d/1UZc9itwtYXF4WhTukyFNE-DYexv1qdF0/view?usp=sharing
+  # presentation1: https://docs.google.com/presentation/d/1I0TOIChqVVdhtN35E7hf2-b-awxOEE_U/edit?usp=sharing&ouid=109099988662065390850&rtpof=true&sd=true
+  # presentation2: https://docs.google.com/presentation/d/1BAr7zRXdXaM_wGHJpCOz9RaujUr9pQ1I/edit?usp=sharing&ouid=109099988662065390850&rtpof=true&sd=true
+  students: [Z.Tibtiba, Y.Chmirrou, S.Kayouh]
+
